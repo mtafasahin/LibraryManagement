@@ -1,117 +1,111 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace LibraryManagementApi.Models;
-
-public class User
-{
-    public int UserId { get; set; }
-    public required string Name { get; set; }
-    public string? Email { get; set; }
-    public required string UserType { get; set; } // Admin, Child, etc.
-
-    public ICollection<ReadingProgress> ReadingProgresses { get; set; } = new List<ReadingProgress>();
-    public ICollection<Review> Reviews { get; set; } = new List<Review>();
-    public ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
-    public ICollection<Book> AddedBooks { get; set; } = new List<Book>(); // Kullanıcının eklediği kitaplar
-}
-
-
 public class Book
 {
-    public int BookId { get; set; }
+    public int Id { get; set; }
     public required string Title { get; set; }
-    public string? Subtitle { get; set; }
-    public string? Description { get; set; }
-    public bool IsDigital { get; set; }
+    public string? SubTitle { get; set; } // Alt başlık
+    public string? Description { get; set; } // Detaylı açıklama
+    public bool IsPhysical { get; set; } = false; // Fiziksel veya dijital olma durumu
+    public bool ExistInLibrary { get; set; } = false; // Fiziksel veya dijital olma durumu
     public string? ISBN { get; set; }
-    public int PageCount { get; set; }
-    public DateTime? PublishedDate { get; set; }
-    public string? FileExtension { get; set; } // Digital kitaplar için
-    public long? FileSize { get; set; } // Byte cinsinden
-    public int AddedByUserId { get; set; } // FK to Users
-    public User? AddedBy { get; set; }
-    public bool IsInLibrary { get; set; } = true; // Kitabın kütüphanede olup olmadığını belirten özellik
+    public int PublicationYear { get; set; }
+    public int PageCount { get; set; } // Sayfa sayısı
+    public string? FileFormat { get; set; } // Dijital kitaplar için dosya formatı
+    public long FileSize { get; set; } // Dijital kitaplar için dosya boyutu    
+    public ICollection<Author> Authors { get; set; } = new List<Author>();
+    public ICollection<Genre> Genres { get; set; } = new List<Genre>();
+    public ICollection<Review> Reviews { get; set; } = new List<Review>(); // Kitap yorumları
+    public ICollection<BookLoan> Loans { get; set; } = new List<BookLoan>();
+    public int? PublisherId { get; set; } // Yayıncıya ait yabancı anahtar
+    public Publisher? Publisher { get; set; }
+    public int? ShelfId { get; set; } // Yayıncıya ait yabancı anahtar
+    public Shelf? Shelf { get; set; }
 
+}
 
-    public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
-    public ICollection<BookCategory> BookCategories { get; set; } = new List<BookCategory>();
-    public ICollection<Lending> Lendings { get; set; } = new List<Lending>(); // Kitap ödünç verilmiş mi?
-    public ICollection<ReadingProgress> ReadingProgresses { get; set; } = new List<ReadingProgress>();
-    public ICollection<Review> Reviews { get; set; } = new List<Review>();
+public class BookLoan
+{
+    public int Id { get; set; }
+    public required int BookId { get; set; }
+    public required string BorrowerName { get; set; } // Sistemde kayıtlı olmayan kullanıcı için
+    public DateTime LoanDate { get; set; }
+    public DateTime? ReturnDate { get; set; }
+    public string? Notes { get; set; }
+    public required Book Book { get; set; }
 }
 
 public class Author
 {
-    public int AuthorId { get; set; }
+    public int Id { get; set; }
     public required string Name { get; set; }
-
-    public ICollection<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
-}
-
-public class Category
-{
-    public int CategoryId { get; set; }
-    public required string Name { get; set; }
-
-    public ICollection<BookCategory> BookCategories { get; set; } = new List<BookCategory>();
+    public string? Biography { get; set; }
+    public int? BirthYear { get; set; }
+    public int? DeathYear { get; set; }
+    public ICollection<Book> Books { get; set; } = new List<Book>();
 }
 
 public class BookAuthor
 {
-    public int BookAuthorId { get; set; }
-    public int BookId { get; set; }
-    public required Book Book { get; set; }
-    public int AuthorId { get; set; }
-    public required Author Author { get; set; }
+    public required int BookId { get; set; }
+    public required int AuthorId { get; set; }
+
+    public Book? Book { get; set; }
+    public Author? Author { get; set; }
+}
+public class Publisher
+{
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public ICollection<Book> Books { get; set; } = new List<Book>();
 }
 
-public class BookCategory
+public class Genre
 {
-    public int BookCategoryId { get; set; }
-    public int BookId { get; set; }
-    public required Book Book { get; set; }
-    public int CategoryId { get; set; }
-    public required Category Category { get; set; }
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
+    public ICollection<Book> Books { get; set; } = new List<Book>();
 }
 
-public class ReadingProgress
+public class Shelf
 {
-    public int ProgressId { get; set; }
-    public int UserId { get; set; }
-    public required User User { get; set; }
-    public int BookId { get; set; }
-    public required Book Book { get; set; }
-    public int PagesRead { get; set; }
-    public int TimeSpentMinutes { get; set; }
-    public DateTime LastUpdated { get; set; }
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
+    public ICollection<Book> Books { get; set; } = new List<Book>();
+}
+
+
+public class User
+{
+    public int Id { get; set; }
+    public string? Username { get; set; }
+    public string? Email { get; set; }    
+    public required string FirstName { get; set; }
+    public string? LastName { get; set; }
+    public Role? Role { get; set; }
+    public ICollection<BookLoan> Loans { get; set; } = new List<BookLoan>(); // Bir kullanıcının tüm ödünç aldığı kitaplar 
+    public ICollection<Book> Wishlists { get; set; } = new List<Book>();
+
 }
 
 public class Review
 {
-    public int ReviewId { get; set; }
+    public int Id { get; set; }
     public int UserId { get; set; }
-    public required User User { get; set; }
     public int BookId { get; set; }
-    public required Book Book { get; set; }
-    public required string Comment { get; set; }
-    public int? Rating { get; set; }
-}
-
-public class Wishlist
-{
-    public int WishlistId { get; set; }
-    public int UserId { get; set; }
+    public required string Content { get; set; }
+    public DateTime CreatedAt { get; set; }
     public required User User { get; set; }
-    public int BookId { get; set; } // Kitap ID'si artık zorunlu
-    public required Book Book { get; set; } // Kitap referansı    public string? Title { get; set; } // Henüz kütüphanede olmayan kitaplar için
+    public required Book Book { get; set; }
 }
 
-public class Lending
+
+public enum Role
 {
-    public int LendingId { get; set; }
-    public int BookId { get; set; } // FK to Books
-    public required Book Book { get; set; }
-    public required string BorrowedBy { get; set; } // Kime ödünç verildi
-    public DateTime BorrowedDate { get; set; } // Ödünç veriliş tarihi
-    public DateTime? ReturnedDate { get; set; } // İade tarihi (null ise ödünçte)
+    Admin,
+    User
 }
