@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IBookService, BookService>();
-
+builder.Services.AddScoped<IShelfService, ShelfService>();
 
 var app = builder.Build();
 

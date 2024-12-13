@@ -15,9 +15,27 @@ namespace LibraryManagementApi.Repositories
             _entities = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
-            return await _entities.ToListAsync();
+            IQueryable<T> query = _entities;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _entities;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -36,14 +54,16 @@ namespace LibraryManagementApi.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             _entities.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(T entity)
+        public async Task RemoveAsync(T entity)
         {
             _entities.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

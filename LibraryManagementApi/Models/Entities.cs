@@ -23,7 +23,8 @@ public class Book
     public Publisher? Publisher { get; set; }
     public int? ShelfId { get; set; } // Yayıncıya ait yabancı anahtar
     public Shelf? Shelf { get; set; }
-
+    public string? Edition { get; set; }
+    public string? CoverImageUrl { get; set; }
 }
 
 public class BookLoan

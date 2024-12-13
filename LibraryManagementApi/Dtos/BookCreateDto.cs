@@ -5,7 +5,7 @@ namespace LibraryManagementApi.Dtos;
 public class AuthorDto {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Biography { get; set; }
+    public string? Biography { get; set; }
     public int? BirthYear { get; set; }
     public int? DeathYear { get; set; }
 }
@@ -14,7 +14,7 @@ public class GenreDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Description { get; set; }
+    public string? Description { get; set; }
 }
 
 public class UserDto
@@ -61,8 +61,8 @@ public class PublisherDto
 public class ShelfDto
 {
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
 }
 
 public class BookDto
@@ -86,4 +86,16 @@ public class BookDto
     public PublisherDto? Publisher { get; set; }
     public int? ShelfId { get; set; } // Yayıncıya ait yabancı anahtar
     public ShelfDto? Shelf { get; set; }
+    public string? Edition { get; set; }
+    public string? CoverImageUrl { get; set; }
 }
+
+
+public class BookShelfDto
+{
+    public List<int> BookIds { get; set; } = new List<int>();
+    public int ShelfId { get; set; }
+}
+
+
+

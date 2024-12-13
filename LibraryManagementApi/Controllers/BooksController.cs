@@ -50,10 +50,7 @@ namespace LibraryManagementApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook(int id, BookDto book)
         {
-            if (id != book.Id)
-            {
-                return BadRequest();
-            }
+            book.Id = id;
 
             await _bookService.UpdateBookAsync(book);
             return NoContent();
@@ -64,6 +61,13 @@ namespace LibraryManagementApi.Controllers
         public async Task<IActionResult> DeleteBook(int id)
         {
             await _bookService.DeleteBookAsync(id);
+            return NoContent();
+        }
+
+        [HttpPost("MoveToShelf")]
+        public async Task<IActionResult> MoveBooksToShelf(BookShelfDto bookShelfDto)
+        {
+            await _bookService.MoveBooksToShelfAsync(bookShelfDto);
             return NoContent();
         }
     }
