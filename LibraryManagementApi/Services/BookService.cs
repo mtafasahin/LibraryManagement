@@ -68,7 +68,7 @@ namespace LibraryManagementApi.Services
                 FileFormat = bookDto.FileFormat,
                 FileSize = bookDto.FileSize??0,
                 Edition = bookDto.Edition,
-                PublicationYear = bookDto.PublicationYear??0,
+                PublicationYear = bookDto.PublicationYear,
                 PublisherId = bookDto.PublisherId,
                 ShelfId = bookDto.ShelfId
             };
@@ -111,7 +111,7 @@ namespace LibraryManagementApi.Services
             book.FileFormat = bookDto.FileFormat;
             book.FileSize = bookDto.FileSize??0;
             book.Edition = bookDto.Edition;
-            book.PublicationYear = bookDto.PublicationYear??0;
+            book.PublicationYear = bookDto.PublicationYear;
             book.ExistInLibrary = bookDto.ExistInLibrary;
             book.Edition = bookDto.Edition;
             // book.Publisher 

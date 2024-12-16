@@ -19,6 +19,12 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IShelfService, ShelfService>();
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8002);
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

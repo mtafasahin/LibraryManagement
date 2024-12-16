@@ -11,7 +11,7 @@ public class Book
     public bool IsPhysical { get; set; } = false; // Fiziksel veya dijital olma durumu
     public bool ExistInLibrary { get; set; } = false; // Fiziksel veya dijital olma durumu
     public string? ISBN { get; set; }
-    public int PublicationYear { get; set; }
+    public string? PublicationYear { get; set; }
     public int PageCount { get; set; } // Sayfa sayısı
     public string? FileFormat { get; set; } // Dijital kitaplar için dosya formatı
     public long FileSize { get; set; } // Dijital kitaplar için dosya boyutu    
